@@ -44,7 +44,21 @@ body,html{
 
 
 }
+.search-container{
+    display: flex;
 
+   
+}
+.btn-search{
+    
+}
+
+.bar{
+    margin: 30px 30px;
+    padding: 20px;
+    border-radius: 8px;
+    font-size: 15px;
+}
 .res-container{
     padding: 0px 50px;
     display: flex;
