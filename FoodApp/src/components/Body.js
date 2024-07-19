@@ -1,10 +1,14 @@
 import ResCard from "./ResCard";
 import { useState, useEffect } from "react";
-
+import {Link} from "react-router-dom"
+import Shimmer from "./Shimmer";
 const Body = () => {
   let [listofRes, setListofRes] = useState([]);
   let[arrayForRes,SetArrayForRes] = useState([]);
   let [searchText, setSearchText] = useState("");
+  const [loading, setLoading] = useState(true);
+
+ 
 
   useEffect(() => {
     fetchData();
@@ -16,9 +20,10 @@ const Body = () => {
     const fetchedData = await fetch(API);
     const jsonFetchedData = await fetchedData.json();
     const restaurants = jsonFetchedData.data.cards[4].card.card.gridElements.infoWithStyle.restaurants;
-    console.log(restaurants);
+    
     setListofRes(restaurants);
     SetArrayForRes(restaurants);
+    setLoading(false);
     
   };
 
@@ -37,7 +42,13 @@ const Body = () => {
     setSearchText("");
   };
 
-  return (
+  if (loading) {
+    return <Shimmer />; 
+  }
+
+
+
+  return   (
     <div className="searchAndRes">
       <div className="search-container">
         <input
@@ -54,7 +65,8 @@ const Body = () => {
 
       <div className="res-container">
         {arrayForRes && arrayForRes.map((ResData) => (
-          <ResCard key={ResData.info.id} resData={ResData} />
+          <Link className="res-link" key={ResData.info.id} to={"/restraunts/"+ResData.info.id}><ResCard  resData={ResData} /></Link>
+          
         ))}
       </div>
     </div>
