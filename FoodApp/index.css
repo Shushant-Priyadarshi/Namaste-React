@@ -135,5 +135,12 @@ body,html{
    
 }
 
+.user-about{
+    border:1px solid black;
+    margin: 50px;
+    padding :20px ; 
+    text-align: center;
+    
+}
 
 
