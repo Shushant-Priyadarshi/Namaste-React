@@ -1,71 +1,46 @@
-import { useEffect, useState } from "react";
-import { Restraunts_API } from "../utils/constants";
 import { CDN_URL } from "../utils/constants";
-import {useParams} from "react-router-dom"
+import { useParams } from "react-router-dom";
+import useRestrauntMenu from "../utils/useRestrauntMenu";
+import RestrauntLoading from "./common/RestrauntLoading";
+import MenuCategory from "./MenuCategory"
 
 const Restraunts = () => {
-  let [resInfo, SetresInfo] = useState(null);
-  let [menuName, setMenuName] = useState();
-
   const {resId} = useParams();
+  const {resInfo,menuName,categories} =  useRestrauntMenu(resId);
 
-
-  useEffect(() => {
-    fetchRestrauntData();
-  }, []);
-
-  const fetchRestrauntData = async () => {
-    const fetchedData = await fetch(Restraunts_API+resId);
-    const jsonData = await fetchedData.json();
-
-    SetresInfo(jsonData.data.cards[2].card.card.info);
-    
-    
-    setMenuName( jsonData.data.cards[4].groupedCard.cardGroupMap.REGULAR.cards[1].card.card.itemCards);
-
-     
-  };
-
-  if (!resInfo) {
-    return <div className="load">Loading...</div>;
+  if (!resInfo || !menuName ) {
+    return < RestrauntLoading/>;
   }
-  const {
-    name,
-    avgRating,
-    cloudinaryImageId,
-    costForTwoMessage,
-    id,
-    cuisines,
-  } = resInfo;
+  
+  const { name, avgRating, cloudinaryImageId, costForTwoMessage, cuisines ,id} = resInfo;
+  
+  const Itemscategories =
+   categories?.filter((c)=>c.card?.card?.["@type"]===
+   "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+  
+  )
 
 
-  if(!menuName){
-    return <div className="load">Loading...</div>;
-  }
- 
 
   
-
+  
+  
   return (
-    <div className="menu">
-      <div className="menu-info">
-        <h1>{name}</h1>
-        <h3>
-          {cuisines.join(", ")} - {avgRating}
+    <div className="">
+      <div className="text-center my-4">
+        <h1 className="text-3xl font-semibold  my-4">{name}</h1>
+        <h3 className="text-lg font-semibold my-4">
+          {cuisines.join(", ")} - {avgRating} - {costForTwoMessage}
         </h3>
-        <h3>{costForTwoMessage}</h3>
-        <ul>
-            {menuName.map((items)=>( <li key={items.card.info.id}>{items.card.info.name} - {"₹ "+items.card.info.price/100}</li>))}
-        </ul>
+       
+        
+        {
+          Itemscategories.map((category)=>(<MenuCategory key={category.card.card.title} data={category}/>))  
+        }
+       
       </div>
-
-      <div className="menu-img">
-        <img
-          src={CDN_URL + cloudinaryImageId}
-          alt="dish"
-          className="menu-img-item"
-        ></img>
-      </div>
+     
+      
     </div>
   );
 };

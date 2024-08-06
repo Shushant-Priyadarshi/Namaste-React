@@ -1,13 +1,16 @@
 import ResCard from "./ResCard";
 import { useState, useEffect } from "react";
 import {Link} from "react-router-dom"
-import Shimmer from "./Shimmer";
+import Shimmer from "./common/Shimmer";
+import {Offline} from "offline-tag";
+
 const Body = () => {
   let [listofRes, setListofRes] = useState([]);
   let[arrayForRes,SetArrayForRes] = useState([]);
   let [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(true);
 
+  
  
 
   useEffect(() => {
@@ -36,36 +39,50 @@ const Body = () => {
 
   const handleSearch = () => {
     const searchedRes = listofRes.filter((Res) =>
-      Res.info.name.toLowerCase().includes(searchText.toLowerCase())
+      Res.info.name.toLowerCase().includes(searchText.toLowerCase()) 
+    ||Res.info.cuisines.join(" ,").toLowerCase().includes(searchText.toLowerCase()) 
+    
+   
     );
     SetArrayForRes(searchedRes);
     setSearchText("");
   };
 
   if (loading) {
-    return <Shimmer />; 
+    return (
+      <div className="res-container flex flex-wrap mt-24 p-5">
+        {Array(10).fill().map((_, index) => (
+          <Shimmer key={index} />
+        ))}
+      </div>
+    );
   }
 
 
 
   return   (
-    <div className="searchAndRes">
-      <div className="search-container">
+    <div className="searchAndRes ">
+
+      <Offline className="offline-text">No internet</Offline>
+
+      
+      <div className="search-container p-6 text-lg">
         <input
           placeholder="Search restaurants"
-          className="bar"
+          className="bar text-lg p-3 rounded-md bg-[#F1F0F4]"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
+          
         />
-        <button className="search" onClick={handleSearch}>Search</button>
-        <button className="search" onClick={handleClick}>
+        <button className="hover:scale-105 duration-500 search mx-4  p-2 text-lg rounded-lg shadow-lg bg-lime-600 text-white" onClick={handleSearch}>Search</button>
+        <button className="hover:scale-105 duration-500 search mx-4 p-2 text-lg rounded-lg shadow-lg bg-lime-600 text-white" onClick={handleClick}>
           Top Restraunts
         </button>
       </div>
 
-      <div className="res-container">
+      <div className="res-container flex flex-wrap">
         {arrayForRes && arrayForRes.map((ResData) => (
-          <Link className="res-link" key={ResData.info.id} to={"/restraunts/"+ResData.info.id}><ResCard  resData={ResData} /></Link>
+          <Link className="res-link flex" key={ResData.info.id} to={"/restraunts/"+ResData.info.id}><ResCard  resData={ResData} /></Link>
           
         ))}
       </div>
