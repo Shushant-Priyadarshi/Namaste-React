@@ -1,7 +1,7 @@
 import ResCard from "./ResCard";
 import { useState, useEffect } from "react";
 import {Link} from "react-router-dom"
-import Shimmer from "./common/Shimmer";
+import Shimmer from "../common/Shimmer";
 import {Offline} from "offline-tag";
 
 const Body = () => {
@@ -62,8 +62,7 @@ const Body = () => {
 
   return   (
     <div className="searchAndRes ">
-
-      <Offline className="offline-text">No internet</Offline>
+      <Offline className="offline-text text-center font-bold text-2xl">No internet</Offline>
 
       
       <div className="search-container p-6 text-lg">
