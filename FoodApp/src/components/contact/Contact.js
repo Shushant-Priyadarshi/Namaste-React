@@ -3,7 +3,7 @@
 const Contact = () => {
   return (
     <div>
-        <h1 style={{textAlign:"center"}}>Contact Page</h1>
+        <h1 className="text-center">Contact Page</h1>
     </div> 
   )
 }
